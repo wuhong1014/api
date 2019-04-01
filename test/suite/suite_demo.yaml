@@ -1,0 +1,8 @@
+- config:
+          url: xxx
+- api:
+        name: login
+        api: interface/api_demo.json
+- api:
+        name: logout
+        api: interface/api_demo.yaml
