@@ -1,6 +1,10 @@
 在conf目录中存放的是测试配置相关的文件，配置文件可以使用ini、xml、yml等文件类型。例如，要测试的网址、调试日志的文件名、日志的输出格式等
 
-在data目录中存放的是需要测试的数据。可以使用csv,xlsx,yaml,xml等文件类型。
+在data目录下存放所有测试相关的文件,使用yaml,yml,json文件类型。
+
+– 在data/interface目录下，用于存放单个接口的测试数据。
+
+– 在data/suite目录下，用于存放测试套件数据。
 
 在log目录下存放输出日志.log文件。
 
@@ -14,11 +18,7 @@ runner.py，执行测试
 
 api_main.py,执行测试的入口
 
-在test目录下存放所有测试相关的文件。
-
-– 在test/interface目录下，用于存放单个接口的测试用例。
-
-– 在test/suite目录下，用于存放测试套件，用来组织用例。
+test目录存放测试用例，与data目录关联，xls or xlsx格式，该目录约定excel下sheet名称英文、唯一，遵循python类定义规范：驼峰，sheet名称=测试类class名称，测试编号=test_测试方法名称
 
 在utils目录下存放公共方法。
 – utils/assertion.py文件用于添加各种自定义的断言（测试结果和目标结果是否一致的判断），断言失败抛出AssertionError就OK。

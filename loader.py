@@ -349,5 +349,5 @@ def load_tests(path):
 
 if __name__=='__main__':
     # file= r'd:\api\test'
-    csv_file=r'D:\api\test\testsuites'
-    print(load_tests(csv_file))
+    csv_file=r'D:\api\data\interface\api_demo.yaml'
+    print(load_file(csv_file))

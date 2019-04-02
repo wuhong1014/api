@@ -2,13 +2,13 @@
     {
         "api": {
             "name": "login",
-            "api": "interface/api_demo.json"
+            "api": "data/api_demo.json"
         }
     },
     {
         "api": {
             "name": "logout",
-            "api": "interface/api_demo.yaml"
+            "api": "data/api_demo.yaml"
         }
     }
 ]
