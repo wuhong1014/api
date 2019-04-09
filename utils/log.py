@@ -3,7 +3,10 @@ import logging
 from  utils.config import Conf
 import os,time
 def logger():
-    conf=Conf(r'd:\api\conf\conf.ini')
+    logger_path=os.path.dirname(__file__)
+    par_dir=os.path.join(logger_path,'..')
+    conf_path=os.path.join(par_dir,'conf/conf.ini')
+    conf=Conf(conf_path)
     LOG_DIR=conf.get_value('data_addr','log_addr')
     log_file=time.strftime('%Y%m%d',time.localtime())+'.log'
     if not os.path.exists(LOG_DIR):
@@ -26,3 +29,4 @@ def logger():
 if __name__=='__main__':
     logger=logger()
     logger.debug('hello world!')
+    logger.warning('23')

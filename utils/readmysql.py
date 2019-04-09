@@ -1,6 +1,6 @@
 #coding:utf-8
 import pymysql
-from httprunner.common.log import logger
+from utils.log import logger
 logger=logger()
 class Mysql:
     def __init__(self,host,port,user,password,db):

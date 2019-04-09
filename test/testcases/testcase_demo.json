@@ -1,0 +1,42 @@
+[
+    {
+        "config": {
+            "name": "demo",
+            "params": [
+                {
+                    "param": {
+                        "user": "$user11111",
+                        "psword": "$psword",
+                        "phnoe": "xxx"
+                    }
+                },
+                {
+                    "param": {
+                        "user": "$user1",
+                        "psword": "$psword1",
+                        "phnoe": "xxx1"
+                    }
+                }
+            ],
+            "request": {
+                "base_url": "http: //127.0.0.1",
+                "headers": {
+                    "Accept": "application/json",
+                    "User-Agent": "xxx"
+                }
+            }
+        }
+    },
+    {
+        "test": {
+            "name": "Login",
+            "api": "interface/api_demo.json"
+        }
+    },
+    {
+        "test": {
+            "name": "Logout",
+            "suite": "suite/suite_demo.yaml"
+        }
+    }
+]

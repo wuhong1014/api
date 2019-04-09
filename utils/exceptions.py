@@ -39,6 +39,6 @@ class ParamsError(BaseError):
     pass
 
 
-
-
+class JSONDecodeError(BaseError):
+    pass
 
