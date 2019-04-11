@@ -69,9 +69,15 @@ class HttpRunner(object):
                 for times_index in range(int(test_dict.get("times", 1))):
                     # suppose one testcase should not have more than 9999 steps,
                     # and one step should not run more than 999 times.
-                    test_method_name = 'test_{:04}_{:03}_{}'.format(index, times_index,test_dict.get("name",""))
-                    test_method = _add_test(test_runner, test_dict)
-                    setattr(TestSequense, test_method_name, test_method)
+                    if 'suite' in test_dict:
+                        for api in test_dict['suite']:
+                            test_method_name = 'test_{:04}_{:03}_{}'.format(index, times_index,api.get("name", ""))
+                            test_method = _add_test(test_runner, api)
+                            setattr(TestSequense, test_method_name, test_method)
+                    else:
+                        test_method_name = 'test_{:04}_{:03}_{}'.format(index, times_index,test_dict.get("name",""))
+                        test_method = _add_test(test_runner, test_dict)
+                        setattr(TestSequense, test_method_name, test_method)
 
             loaded_testcase = self.test_loader.loadTestsFromTestCase(TestSequense)
             setattr(loaded_testcase, "config", config)

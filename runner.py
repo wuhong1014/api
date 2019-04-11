@@ -182,6 +182,7 @@ class Runner(object):
             exceptions.ExtractFailure
 
         """
+
         # clear meta data first to ensure independence for each test
         self.__clear_test_data()
 
@@ -192,9 +193,9 @@ class Runner(object):
         test_dict = lower_test_dict_keys(test_dict)
         test_variables = test_dict.get("variables", {})
         self.session_context.init_test_variables(test_variables)
-
         # teststep name
         test_name = test_dict.get("name", "")
+
 
         # parse test request
         raw_request = test_dict.get('request', {})

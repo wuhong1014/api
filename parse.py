@@ -672,6 +672,7 @@ def __parse_testcase_tests(tests, config, project_mapping):
             test_dict.update(suite_def)
 
             _parse_suite(test_dict)
+
         else:
             if "api_def" in test_dict:
                 # test_dict has API reference
