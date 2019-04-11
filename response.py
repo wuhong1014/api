@@ -3,7 +3,7 @@
 import json
 import re
 
-from utils import exceptions, log,query_json,dict_format
+from utils import exceptions, log ,utils
 from collections import OrderedDict
 from requests.models import PreparedRequest
 from requests.structures import CaseInsensitiveDict
@@ -144,10 +144,10 @@ class ResponseObject(object):
 
             if isinstance(body, (dict, list)):
                 # content = {"xxx": 123}, content.xxx
-                return query_json.query_json(body, sub_query)
+                return utils.query_json(body, sub_query)
             elif sub_query.isdigit():
                 # content = "abcdefg", content.3 => d
-                return query_json.query_json(body, sub_query)
+                return utils.query_json(body, sub_query)
             else:
                 # content = "<html>abcdefg</html>", content.xxx
                 err_msg = u"Failed to extract attribute from response body! => {}\n".format(field)
@@ -207,7 +207,7 @@ class ResponseObject(object):
 
         logger.log_debug("start to extract from response object.")
         extracted_variables_mapping = OrderedDict()
-        extract_binds_order_dict = dict_format.ensure_mapping_format(extractors)
+        extract_binds_order_dict = utils.ensure_mapping_format(extractors)
 
         for key, field in extract_binds_order_dict.items():
             extracted_variables_mapping[key] = self.extract_field(field)

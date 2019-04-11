@@ -17,7 +17,7 @@
 
 - test:
         name: Login
-        api: interface/api_demo.json
+        api: data/interface/api_demo.json
 - test:
         name: Logout
-        suite: suite/suite_demo.json
+        suite: data/suite/suite_demo.json

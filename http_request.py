@@ -3,9 +3,11 @@ import re
 
 import requests
 from requests import Request,Response
-from utils.dict_format import lower_dict_keys
-from utils.exceptions import ParamsError,RequestException,MissingSchema, InvalidSchema, InvalidURL
+from utils.utils import lower_dict_keys,omit_long_data
+from utils.exceptions import ParamsError
 from utils import log
+
+
 logger=log.logger()
 class ApiResponse(Response):
 
@@ -95,7 +97,7 @@ class HttpRequest(requests.Session):
             except ValueError:
                 # only record at most 512 text charactors
                 resp_text = resp_obj.text
-                req_resp_dict["response"]["text"] = resp_text[0:512]
+                req_resp_dict["response"]["text"] = omit_long_data(resp_text)
 
         log_print(req_resp_dict, "response")
 
@@ -118,10 +120,10 @@ class HttpRequest(requests.Session):
         self.init_data['data']=[self.get_req_resp_record(resp_obj)]
         try:
             resp_obj.raise_for_status()
-        except RequestException as e:
-            logger.log_error(u"{exception}".format(exception=str(e)))
+        except requests.RequestException as e:
+            logger.error(u"{exception}".format(exception=str(e)))
         else:
-            logger.log_info(
+            logger.error(
                 "status_code: {}\n".format(resp_obj.status_code))
         return resp_obj
     def _send_request(self,method, url, **kwargs):

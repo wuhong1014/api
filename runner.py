@@ -1,12 +1,14 @@
 # encoding: utf-8
 
 from unittest.case import SkipTest
+import response
+from utils import exceptions, log
+from http_request import HttpRequest
+from context import SessionContext
+from utils.utils import lower_test_dict_keys
+from utils.utils import omit_long_data
 
-from httprunner import exceptions, logger, response, utils
-from httprunner.client import HttpSession
-from httprunner.context import SessionContext
-
-
+logger=log.logger()
 class Runner(object):
     """ Running testcases.
 
@@ -17,7 +19,7 @@ class Runner(object):
                 "base_url": "http://127.0.0.1",
                 "verify": False
             }
-        >>> runner = Runner(config, functions)
+        >>> runner = Runner(config, functions,http_client_session=None)
 
         >>> test_dict = {
                 "name": "test description",
@@ -31,7 +33,7 @@ class Runner(object):
 
     """
 
-    def __init__(self, config, functions, http_client_session=None):
+    def __init__(self, config, functions):
         """ run testcase or testsuite.
 
         Args:
@@ -44,7 +46,7 @@ class Runner(object):
                     "teardown_hooks", []
                 }
 
-            http_client_session (instance): requests.Session(), or locust.client.Session() instance.
+            http_client_session (instance): requests.Session()
 
         """
         base_url = config.get("base_url")
@@ -58,7 +60,7 @@ class Runner(object):
         # testcase teardown hooks
         self.testcase_teardown_hooks = config.get("teardown_hooks", [])
 
-        self.http_client_session = http_client_session or HttpSession(base_url)
+        self.http_client_session = HttpRequest(base_url)
         self.session_context = SessionContext(self.functions)
 
         if testcase_setup_hooks:
@@ -71,19 +73,16 @@ class Runner(object):
     def __clear_test_data(self):
         """ clear request and response data
         """
-        if not isinstance(self.http_client_session, HttpSession):
-            return
 
         self.validation_results = []
-        self.http_client_session.init_meta_data()
+        self.http_client_session.init_case_data()
 
     def __get_test_data(self):
         """ get request/response data and validate results
         """
-        if not isinstance(self.http_client_session, HttpSession):
-            return
 
-        meta_data = self.http_client_session.meta_data
+
+        meta_data = self.http_client_session.init_data
         meta_data["validators"] = self.validation_results
         return meta_data
 
@@ -133,21 +132,21 @@ class Runner(object):
             hook_type (enum): setup/teardown
 
         """
-        logger.log_debug("call {} hook actions.".format(hook_type))
+        logger.debug("call {} hook actions.".format(hook_type))
         for action in actions:
 
             if isinstance(action, dict) and len(action) == 1:
                 # format 1
                 # {"var": "${func()}"}
                 var_name, hook_content = list(action.items())[0]
-                logger.log_debug("assignment with hook: {} = {}".format(var_name, hook_content))
+                logger.debug("assignment with hook: {} = {}".format(var_name, hook_content))
                 self.session_context.update_test_variables(
                     var_name,
                     self.session_context.eval_content(hook_content)
                 )
             else:
                 # format 2
-                logger.log_debug("call hook function: {}".format(action))
+                logger.debug("call hook function: {}".format(action))
                 # TODO: check hook function if valid
                 self.session_context.eval_content(action)
 
@@ -190,7 +189,7 @@ class Runner(object):
         self._handle_skip_feature(test_dict)
 
         # prepare
-        test_dict = utils.lower_test_dict_keys(test_dict)
+        test_dict = lower_test_dict_keys(test_dict)
         test_variables = test_dict.get("variables", {})
         self.session_context.init_test_variables(test_variables)
 
@@ -224,7 +223,7 @@ class Runner(object):
             raise exceptions.ParamsError(err_msg)
 
         logger.log_info("{method} {url}".format(method=method, url=url))
-        logger.log_debug("request kwargs(raw): {kwargs}".format(kwargs=parsed_test_request))
+        logger.debug("request kwargs(raw): {kwargs}".format(kwargs=parsed_test_request))
 
         # request
         resp = self.http_client_session.request(
@@ -260,7 +259,7 @@ class Runner(object):
             err_msg += "method: {}\n".format(method)
             err_msg += "headers: {}\n".format(parsed_test_request.pop("headers", {}))
             for k, v in parsed_test_request.items():
-                v = utils.omit_long_data(v)
+                v = omit_long_data(v)
                 err_msg += "{}: {}\n".format(k, repr(v))
 
             err_msg += "\n"

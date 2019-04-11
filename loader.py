@@ -105,7 +105,7 @@ def __extend_with_api_ref(raw_testinfo):
             api_path=os.path.join(TESTS_DIR,api_path)
         else:
             raise  FileNotFoundError('{} not found !'.format(api_path))
-    raw_testinfo['api_ref'] = load_file(api_path)
+    raw_testinfo['api_def'] = load_file(api_path)
 def __extend_with_suite_ref(raw_testinfo):
     suite_path = raw_testinfo['suite']
     if not os.path.exists(suite_path):
@@ -113,7 +113,7 @@ def __extend_with_suite_ref(raw_testinfo):
             suite_path=os.path.join(TESTS_DIR,suite_path)
         else:
             raise  FileNotFoundError('{} not found !'.format(suite_path))
-    raw_testinfo['suite_ref'] = format_suite_content(load_file(suite_path))
+    raw_testinfo['suite_def'] = format_suite_content(load_file(suite_path))
 def __extend_with_testcase_ref(raw_testinfo):
     testcase_path = raw_testinfo['testcase']
     if not os.path.exists(testcase_path):
@@ -121,7 +121,7 @@ def __extend_with_testcase_ref(raw_testinfo):
             testcase_path=os.path.join(TESTS_DIR,testcase_path)
         else:
             raise  FileNotFoundError('{} not found !'.format(testcase_path))
-    raw_testinfo['testcase_ref'] = format_testcase_content(load_file(testcase_path))
+    raw_testinfo['testcase_def'] = format_testcase_content(load_file(testcase_path))
 def load_full_test_info(raw_testinfo):
     """ load testcase step content.
             teststep maybe defined directly, or reference api/testcase.
@@ -170,23 +170,19 @@ def load_full_test_info(raw_testinfo):
     return raw_testinfo
 def format_suite_content(suite_content):
     '''
-    :param suite_content:  from a suite file，like [{config:xxx},{api:xxx},{api:xxx}]
+    :param suite_content:  from a suite file，like [{api:xxx},{api:xxx}]
     :return: {
-        config:{},
-        apis:[api1,api2]
+        suite:[api1,api2]
     }
     '''
-    config={}
     apis=[]
     for item in suite_content:
         key,value =item.popitem()
-        if key == 'config':
-            config.update(value)
-        elif key == 'api':
+        if  key == 'api':
             apis.append(load_full_test_info(value))
         else:
-            logger.warning("unexpected key :{}, key should only be 'config' or 'api'.".format(key))
-    return {"config":config,"suite":apis}
+            logger.warning("unexpected key :{}, key should only be  'api'.".format(key))
+    return {"suite":apis}
 def format_testcase_content(testcase_content):
     '''
     :param testcase_content:  from a testcase file
@@ -237,7 +233,7 @@ def load_test_file(file_path):
             },
             {
                 name:xxx
-                config:xxx
+                path:xxx
                 type:suite
                 apis:xxx
             },
@@ -349,5 +345,5 @@ def load_tests(path):
 
 if __name__=='__main__':
     # file= r'd:\api\test'
-    csv_file=r'D:\api\data\interface\api_demo.yaml'
-    print(load_file(csv_file))
+    csv_file=r'd:/api/test/testcases'
+    print(load_tests(csv_file))

@@ -1,8 +1,6 @@
-- config:
-          url: xxx
 - api:
         name: login
-        api: data/api_demo.json
+        api: data/interface/api_demo.yaml
 - api:
         name: logout
-        api: data/api_demo.yaml
+        api: data/interface/api_demo.yaml

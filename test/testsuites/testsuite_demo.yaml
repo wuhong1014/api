@@ -7,7 +7,7 @@
 
 - testcase:
     name: testcase1
-    testcase: testcases/testcase_demo.json
+    testcase: testcases/testcase_demo.json1
     variables:
         member_id: xxx
 

@@ -7,7 +7,8 @@
 class BaseFailure(Exception):
     pass
 
-
+class ValidationFailure(BaseFailure):
+    pass
 class ExtractFailure(BaseFailure):
     pass
 

@@ -1,7 +1,7 @@
 [
     {
         "config": {
-            "name": "demo",
+            "name": "demo1",
             "params": [
                 {
                     "param": {
@@ -30,13 +30,13 @@
     {
         "test": {
             "name": "Login",
-            "api": "interface/api_demo.json"
+            "api": "data/interface/api_demo.json"
         }
     },
     {
         "test": {
             "name": "Logout",
-            "suite": "suite/suite_demo.yaml"
+            "suite": "data/suite/suite_demo.yaml"
         }
     }
 ]
